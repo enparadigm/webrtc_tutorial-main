@@ -116,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   signaling.hangUp(_localRenderer);
+                  setState(() {});
                 },
                 child: Text("Hangup"),
               )
