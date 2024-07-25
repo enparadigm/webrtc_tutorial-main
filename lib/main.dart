@@ -5,18 +5,18 @@ import 'package:webrtc_tutorial/signaling.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: FirebaseOptions(
-      apiKey: "AIzaSyBvyn-EWv8vJub6I_6jDTXcpsC9hB4WdEM",
-      authDomain: "flutter-webrtc-sample-99d26.firebaseapp.com",
-      projectId: "flutter-webrtc-sample-99d26",
-      storageBucket: "flutter-webrtc-sample-99d26.appspot.com",
-      messagingSenderId: "744506451129",
-      appId: "1:744506451129:web:cbeae396759f831f7a2768",
-      measurementId: "G-KG3RQHNB6N"
-  ),
-  ).catchError((onError){
-    print(onError);
-  });
+  // await Firebase.initializeApp(options: FirebaseOptions(
+  //     apiKey: "AIzaSyBvyn-EWv8vJub6I_6jDTXcpsC9hB4WdEM",
+  //     authDomain: "flutter-webrtc-sample-99d26.firebaseapp.com",
+  //     projectId: "flutter-webrtc-sample-99d26",
+  //     storageBucket: "flutter-webrtc-sample-99d26.appspot.com",
+  //     messagingSenderId: "744506451129",
+  //     appId: "1:744506451129:web:cbeae396759f831f7a2768",
+  //     measurementId: "G-KG3RQHNB6N"
+  // ),
+  // ).catchError((onError){
+  //   print(onError);
+  // });
   runApp(MyApp());
 }
 

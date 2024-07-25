@@ -11,10 +11,7 @@ class Signaling {
   Map<String, dynamic> configuration = {
     'iceServers': [
       {
-        'urls': [
-          'stun:stun1.l.google.com:19302',
-          'stun:stun2.l.google.com:19302'
-        ]
+        'urls': ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302']
       }
     ]
   };
@@ -35,15 +32,17 @@ class Signaling {
     localStream?.getTracks().forEach((track) {
       peerConnection?.addTrack(track, localStream!);
     });
-    // STEP 1.1.1 - Create Data Channel
+    // STEP 2 - Create Data Channel
     _dataChannelDict = RTCDataChannelInit();
     _dataChannelDict!.ordered = true;
     print('******** SURYA - Line in 35 ******');
     print(_dataChannelDict == null);
-    await peerConnection!.createDataChannel(
+    await peerConnection!
+        .createDataChannel(
       "chat",
       RTCDataChannelInit(),
-    ).then((value) {
+    )
+        .then((value) {
       print('******** SURYA - Data channel Succeed ******');
       _dataChannel = value;
     }).onError((error, stackTrace) {
@@ -62,7 +61,7 @@ class Signaling {
 
     print('Surya - createRoom 38');
 
-    // Step 5 - Collect ICE candidates
+    // Step 2.1 - Collect ICE candidates
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
       print('****SURYA Got candidate *********');
       print('Surya - Got candidate: ${candidate.toMap()}');
@@ -75,64 +74,65 @@ class Signaling {
       //   ),
       // );
     };
-    // Step 1.1 - Create offer
-     await peerConnection!.createOffer().then((pyOffer) async {
-       await peerConnection!.setLocalDescription(pyOffer);
-       print('Surya - Created offer: ${pyOffer.toMap()}');
-       print('***** Surya Checking ICE Is complete ******');
-       _waitForGatheringComplete().then((value){
-         // Step 2 - Post Created offer to the local hosted API
-         postData(offer: pyOffer.toMap(), onSuccess: (answer) async {
-           // Step 3 - Get the answer type as a response
-           //todo - Get the response
-           print("Surya - API Call Succeed");
-           print('**** SDP *********');
-           print(answer['sdp']);
-           print('**** TYPE *********');
-           print(answer['type']);
-           // Step 4 - Use the answer response and set it to remote peer
-           final remoteAnswer =  RTCSessionDescription(
-             answer['sdp'],
-             answer['type'],
-           );
-           await peerConnection?.setRemoteDescription(remoteAnswer).then((value){
-             print('****SURYA REMOTE SET SUCCESSFULLY *********');
+    // Step 3 - Create offer
+    await peerConnection!.createOffer().then((pyOffer) async {
+      await peerConnection!.setLocalDescription(pyOffer);
+      print('Surya - Created offer: ${pyOffer.toMap()}');
+      print('***** Surya Checking ICE Is complete ******');
+      _waitForGatheringComplete().then((value) {
 
-             Future.delayed(Duration(seconds: 4),(){
-               print('*** SURYA SENDING MESSAGE AS start_recording');
-               sendMessage('start_recording');
-               Future.delayed(Duration(seconds: 4),(){
-                 print('*** SURYA SENDING MESSAGE AS STOP_RECORDING');
-                 sendMessage('stop_recording');
-               });
-             });
+      });
+      // Step 2 - Post Created offer to the local hosted API
+      postData(
+          offer: pyOffer.toMap(),
+          onSuccess: (answer) async {
+            // Step 3 - Get the answer type as a response
+            //todo - Get the response
+            print("Surya - API Call Succeed");
+            print('**** SDP *********');
+            print(answer['sdp']);
+            print('**** TYPE *********');
+            print(answer['type']);
+            // Step 4 - Use the answer response and set it to remote peer
+            final remoteAnswer = RTCSessionDescription(
+              answer['sdp'],
+              answer['type'],
+            );
+            await peerConnection?.setRemoteDescription(remoteAnswer).then((value) {
+              print('****SURYA REMOTE SET SUCCESSFULLY *********');
 
+              Future.delayed(Duration(seconds: 4), () {
+                print('*** SURYA SENDING MESSAGE AS start_recording');
+                sendMessage('start_recording');
+                Future.delayed(Duration(seconds: 4), () {
+                  print('*** SURYA SENDING MESSAGE AS STOP_RECORDING');
+                  sendMessage('stop_recording');
+                });
+              });
+            }).onError((error, stackTrace) {
+              print('**** SURYA FAILed TO SET REMOTE *********');
+              print(error);
+              print(stackTrace);
+            });
 
-           }).onError((error, stackTrace) {
-             print('**** SURYA FAILed TO SET REMOTE *********');
-             print(error);
-             print(stackTrace);
-           });
+            // Step 6 - Listen for remote repose
+            peerConnection?.onTrack = (RTCTrackEvent event) {
+              print('Surya - Got remote track: ${event.streams[0]}');
 
-
-           // Step 6 - Listen for remote repose
-           peerConnection?.onTrack = (RTCTrackEvent event) {
-             print('Surya - Got remote track: ${event.streams[0]}');
-
-             event.streams[0].getTracks().forEach((track) {
-               print('Surya - Add a track to the remoteStream $track');
-               remoteStream?.addTrack(track);
-             });
-           };
-         }, onFailure: (){
-           print("Surya - API Call failed");
-         });
-       });
-     }).onError((error, stackTrace) {
-       print('Surya - Failed to create offer');
-       print(error);
-       print(stackTrace);
-     });
+              event.streams[0].getTracks().forEach((track) {
+                print('Surya - Add a track to the remoteStream $track');
+                remoteStream?.addTrack(track);
+              });
+            };
+          },
+          onFailure: () {
+            print("Surya - API Call failed");
+          });
+    }).onError((error, stackTrace) {
+      print('Surya - Failed to create offer');
+      print(error);
+      print(stackTrace);
+    });
 
     // // Step 4 - Use the answer response and set it to remote peer
     // await peerConnection?.setRemoteDescription(answer);
@@ -331,8 +331,7 @@ class Signaling {
     RTCVideoRenderer localVideo,
     RTCVideoRenderer remoteVideo,
   ) async {
-    var stream = await navigator.mediaDevices
-        .getUserMedia({'video': true, 'audio': true});
+    var stream = await navigator.mediaDevices.getUserMedia({'video': true, 'audio': true});
 
     localVideo.srcObject = stream;
     localStream = stream;
@@ -389,18 +388,16 @@ class Signaling {
       onAddRemoteStream?.call(stream);
       remoteStream = stream;
     };
-
   }
 
   // check ICEgathering is complete or not
   Future<bool> _waitForGatheringComplete() async {
-    print("WAITING FOR GATHERING COMPLETE");
-    if (peerConnection!.iceGatheringState ==
-        RTCIceGatheringState.RTCIceGatheringStateComplete) {
-      print('***** Surya - ICE is COMPLETE ******');
+    // print("WAITING FOR GATHERING COMPLETE");
+    if (peerConnection!.iceGatheringState == RTCIceGatheringState.RTCIceGatheringStateComplete) {
+      // print('***** Surya - ICE is COMPLETE ******');
       return true;
     } else {
-      print('***** Surya - ICE is NOT COMPLETE ******');
+      // print('***** Surya - ICE is NOT COMPLETE ******');
       await Future.delayed(Duration(seconds: 1));
       return await _waitForGatheringComplete();
     }
@@ -415,6 +412,7 @@ class Signaling {
       print('*** SURYA - Data channel is not open');
     }
   }
+
   void _onDataChannelState(RTCDataChannelState? state) {
     switch (state) {
       case RTCDataChannelState.RTCDataChannelClosed:
@@ -429,10 +427,12 @@ class Signaling {
   }
 }
 
-
-
-Future<void> postData({required Map<String, dynamic> offer,required Function(Map<String, dynamic>) onSuccess,required Function onFailure,}) async {
-  final String url = 'http://localhost:8080/offer';
+Future<void> postData({
+  required Map<String, dynamic> offer,
+  required Function(Map<String, dynamic>) onSuccess,
+  required Function onFailure,
+}) async {
+  final String url = 'http://192.168.1.247:8080/offer';
 
   // Prepare the request body
   Map<String, dynamic> body = offer;
