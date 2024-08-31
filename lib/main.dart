@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'New check demo',
+      title: 'Tom and Jerry',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("This is test site"),
+        title: Text("Tom and Jerry"),
       ),
       body: Column(
         children: [
