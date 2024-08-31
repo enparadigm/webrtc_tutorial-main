@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'New check demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sharpsell WebRTC POC"),
+        title: Text("POC"),
       ),
       body: Column(
         children: [
