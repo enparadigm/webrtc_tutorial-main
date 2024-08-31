@@ -6,16 +6,15 @@ import 'package:webrtc_tutorial/signaling.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: FirebaseOptions(
-      apiKey: "AIzaSyBvyn-EWv8vJub6I_6jDTXcpsC9hB4WdEM",
-      authDomain: "flutter-webrtc-sample-99d26.firebaseapp.com",
-      projectId: "flutter-webrtc-sample-99d26",
-      storageBucket: "flutter-webrtc-sample-99d26.appspot.com",
-      messagingSenderId: "744506451129",
-      appId: "1:744506451129:web:cbeae396759f831f7a2768",
-      measurementId: "G-KG3RQHNB6N"
+      apiKey: "AIzaSyDh7StCVg9Pu1gEO6u2oycKQ9W2cGry124",
+      authDomain: "new-rtc-beafa.firebaseapp.com",
+      projectId: "new-rtc-beafa",
+      storageBucket: "new-rtc-beafa.appspot.com",
+      messagingSenderId: "806410149215",
+      appId: "1:806410149215:web:b78cc793fcde6bc4882aea"
   ),
   ).catchError((onError){
-    print(onError);
+    print("surya in 18 $onError");
   });
   runApp(MyApp());
 }

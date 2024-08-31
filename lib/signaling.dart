@@ -53,9 +53,14 @@ class Signaling {
     print('Surya - Created offer: $offer');
 
     Map<String, dynamic> roomWithOffer = {'offer': offer.toMap()};
-
-    await roomRef.set(roomWithOffer);
+    print("surya in 56 $roomWithOffer");
+    await roomRef.set(roomWithOffer).onError((error, stackTrace) {
+      print("Surya in 58 $error");
+      print("Surya in 58 $stackTrace");
+    });
+    print("surya in 58");
     var roomId = roomRef.id;
+    print("surya in 59 $roomId");
     print('Surya - New room created with SDK offer. Room ID: $roomId');
     currentRoomText = 'Current room is $roomId - You are the caller!';
     // Created a Room
