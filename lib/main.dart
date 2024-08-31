@@ -16,6 +16,7 @@ Future<void> main() async {
   ).catchError((onError){
     print("surya in 18 $onError");
   });
+  print("surya in 19 and running app");
   runApp(MyApp());
 }
 
